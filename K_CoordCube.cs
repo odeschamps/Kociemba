@@ -45,7 +45,7 @@ internal class CoordCube
         URtoUL = c.getURtoUL();
         UBtoDF = c.getUBtoDF();
         URtoDF = c.getURtoDF();// only needed in phase2
-        info += "[ Finished Initialiation: " + String.Format(@"{0:mm\:ss\.ffff}", (DateTime.Now - startTime)) + " ] ";
+        info += "[ Finished Initialiation: " + $@"{DateTime.UtcNow - startTime:mm\:ss\.ffff}" + " ] ";
     }
 
     // A move on the coordinate level
@@ -72,12 +72,14 @@ internal class CoordCube
     // Move table for the twists of the corners
     // twist < 2187 in phase 2.
     // twist = 0 in phase 2.
-    internal static short[,] twistMove = CoordCubeTables.twist;
+    internal static short[,] twistMove = new short[N_TWIST, N_MOVE];
+
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     // Move table for the flips of the edges
     // flip < 2048 in phase 1
     // flip = 0 in phase 2.
-    internal static short[,] flipMove = CoordCubeTables.flip;
+    internal static short[,] flipMove = new short[N_FLIP, N_MOVE];
+
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     // Parity of the corner permutation. This is the same as the parity for the edge permutation of a valid cube.
     // parity has values 0 and 1
@@ -94,14 +96,14 @@ internal class CoordCube
     // FRtoBRMove < 11880 in phase 1
     // FRtoBRMove < 24 in phase 2
     // FRtoBRMove = 0 for solved cube
-    internal static short[,] FRtoBR_Move = CoordCubeTables.FRtoBR;
+    internal static short[,] FRtoBR_Move = new short[N_FRtoBR, N_MOVE];
 
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     // Move table for permutation of six corners. The positions of the DBL and DRB corners are determined by the parity.
     // URFtoDLF < 20160 in phase 1
     // URFtoDLF < 20160 in phase 2
     // URFtoDLF = 0 for solved cube.
-    internal static short[,] URFtoDLF_Move = CoordCubeTables.URFtoDLF;
+    internal static short[,] URFtoDLF_Move = new short[N_URFtoDLF, N_MOVE];
 
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     // Move table for the permutation of six U-face and D-face edges in phase2. The positions of the DL and DB edges are
@@ -109,47 +111,45 @@ internal class CoordCube
     // URtoDF < 665280 in phase 1
     // URtoDF < 20160 in phase 2
     // URtoDF = 0 for solved cube.
-    internal static short[,] URtoDF_Move = CoordCubeTables.URtoDF;
+    internal static short[,] URtoDF_Move = new short[N_URtoDF, N_MOVE];
 
     // **************************helper move tables to compute URtoDF for the beginning of phase2************************
 
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     // Move table for the three edges UR,UF and UL in phase1.
-    internal static short[,] URtoUL_Move = CoordCubeTables.URtoUL;
+    internal static short[,] URtoUL_Move = URtoUL_Move = new short[N_URtoUL, N_MOVE];
 
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     // Move table for the three edges UB,DR and DF in phase1.
-    internal static short[,] UBtoDF_Move = CoordCubeTables.UBtoDF;
+    internal static short[,] UBtoDF_Move = new short[N_UBtoDF, N_MOVE];
 
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     // Table to merge the coordinates of the UR,UF,UL and UB,DR,DF edges at the beginning of phase2
-    internal static short[,] MergeURtoULandUBtoDF = CoordCubeTables.MergeURtoULandUBtoDF;
-
+    internal static short[,] MergeURtoULandUBtoDF = MergeURtoULandUBtoDF = new short[336, 336];
 
     // ****************************************Pruning tables for the search*********************************************
 
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     // Pruning table for the permutation of the corners and the UD-slice edges in phase2.
     // The pruning table entries give a lower estimation for the number of moves to reach the solved cube.
-    internal static sbyte[] Slice_URFtoDLF_Parity_Prun = CoordCubeTables.Slice_URFtoDLF_Parity_Prun;
+    internal static sbyte[] Slice_URFtoDLF_Parity_Prun = Slice_URFtoDLF_Parity_Prun = new sbyte[N_SLICE2 * N_URFtoDLF * N_PARITY / 2];
 
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     // Pruning table for the permutation of the edges in phase2.
     // The pruning table entries give a lower estimation for the number of moves to reach the solved cube.
-    internal static sbyte[] Slice_URtoDF_Parity_Prun = CoordCubeTables.Slice_URtoDF_Parity_Prun;
+    internal static sbyte[] Slice_URtoDF_Parity_Prun = Slice_URtoDF_Parity_Prun = new sbyte[N_SLICE2 * N_URtoDF * N_PARITY / 2];
 
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     // Pruning table for the twist of the corners and the position (not permutation) of the UD-slice edges in phase1
     // The pruning table entries give a lower estimation for the number of moves to reach the H-subgroup.
-    internal static sbyte[] Slice_Twist_Prun = CoordCubeTables.Slice_Twist_Prun;
+    internal static sbyte[] Slice_Twist_Prun = Slice_Twist_Prun = new sbyte[N_SLICE1 * N_TWIST / 2 + 1];
 
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     // Pruning table for the flip of the edges and the position (not permutation) of the UD-slice edges in phase1
     // The pruning table entries give a lower estimation for the number of moves to reach the H-subgroup.
-    internal static sbyte[] Slice_Flip_Prun = CoordCubeTables.Slice_Flip_Prun;
-    // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    internal static sbyte[] Slice_Flip_Prun = new sbyte[N_SLICE1 * N_FLIP / 2];
 
- 
+    // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     // Set pruning value in table. Two values are stored in one byte.
     internal static void setPruning(sbyte[] table, int index, sbyte value)
     {

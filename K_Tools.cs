@@ -27,8 +27,9 @@ public class Tools
     ///         -4: Not all 8 corners exist exactly once<br>
     ///         -5: Twist error: One corner has to be twisted<br>
     ///         -6: Parity error: Two corners or two edges have to be exchanged </returns>
-    public static int verify(string s)
+    public static int verify(string s, out CubieCube cc)
     {
+        cc = null;
         int[] count = new int[6];
         try
         {
@@ -51,7 +52,7 @@ public class Tools
         }
 
         FaceCube fc = new FaceCube(s);
-        CubieCube cc = fc.toCubieCube();
+        cc = fc.toCubieCube();
 
         return cc.verify();
     }
