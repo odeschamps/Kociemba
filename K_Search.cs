@@ -162,8 +162,7 @@ public class Search
 
         // +++++++++++++++++++++++ initialization +++++++++++++++++++++++++++++++++
         string currentTime = "[ a: " + $@"{DateTime.UtcNow - startTime:mm\:ss\.ffff}" + " ] ";
-        CoordCube c = new CoordCube(cc, startTime, currentTime, out info);
-        //CoordCubeBuildTables c = new CoordCubeBuildTables(cc, buildTables);
+        CoordCube c = new(cc, startTime, currentTime, out info);
         //return "lol";
 
         po[0] = 0;
