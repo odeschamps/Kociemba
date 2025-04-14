@@ -76,14 +76,15 @@ public class FaceCube
         [CubeColor.B, CubeColor.L],
         [CubeColor.B, CubeColor.R]
     ];
+    
+    public const string SolvedCube = "UUUUUUUUURRRRRRRRRFFFFFFFFFDDDDDDDDDLLLLLLLLLBBBBBBBBB";
 
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     public FaceCube()
     {
-        string s = "UUUUUUUUURRRRRRRRRFFFFFFFFFDDDDDDDDDLLLLLLLLLBBBBBBBBB";
         for (int i = 0; i < 54; i++)
         {
-            CubeColor col = (CubeColor)Enum.Parse(typeof(CubeColor), s[i].ToString());
+            CubeColor col = Enum.Parse<CubeColor>(SolvedCube[i].ToString());
             f[i] = col;
         }
     }

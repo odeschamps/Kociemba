@@ -143,48 +143,26 @@ public class Search
      *         Error 7: No solution exists for the given maxDepth<br>
      *         Error 8: Timeout, no solution within given time
      */
-    public static string solution(string facelets, out string info, int maxDepth = 22, long timeOut = 6000, bool useSeparator = false )
+    public static string solution(string facelets, out string info, int maxDepth = 22, long timeOut = 6000, bool useSeparator = false)
     {
-        if (facelets == "UUUUUUUUURRRRRRRRRFFFFFFFFFDDDDDDDDDLLLLLLLLLBBBBBBBBB")
+        if (facelets == FaceCube.SolvedCube)
         {
             info = "Already Solved";
             return "";
         }
-        DateTime startTime = DateTime.Now;
+
+        DateTime startTime = DateTime.UtcNow;
         info = "";
-      
-                     
-        int s;
-        // +++++++++++++++++++++check for wrong input +++++++++++++++++++++++++++++
-        int[] count = new int[6];
-        try
+
+        int v = Tools.verify(facelets, out CubieCube cc);
+        if (v != 0)
         {
-            for (int i = 0; i < 54; i++)
-            {
-                count[(int)CubeColor.Parse(typeof(CubeColor), facelets.Substring(i, 1))]++;
-            }
-        }
-        catch (Exception)
-        {
-            return "Error 1";
-        }
-        for (int i = 0; i < 6; i++)
-        {
-            if (count[i] != 9)
-            {
-                return "Error 1";
-            }
+            return "Error " + Math.Abs(v);
         }
 
-        FaceCube fc = new FaceCube(facelets);
-        CubieCube cc = fc.toCubieCube();
-        if ((s = cc.verify()) != 0)
-        {
-            return "Error " + Math.Abs(s);
-        }
         // +++++++++++++++++++++++ initialization +++++++++++++++++++++++++++++++++
-        string currentTime = "[ a: " + String.Format(@"{0:mm\:ss\.ffff}", (DateTime.Now - startTime)) + " ] ";
-        CoordCube c = new CoordCube(cc, startTime, currentTime, out info);
+        string currentTime = "[ a: " + $@"{DateTime.UtcNow - startTime:mm\:ss\.ffff}" + " ] ";
+        CoordCube c = new(cc, startTime, currentTime, out info);
         //return "lol";
 
         po[0] = 0;
@@ -198,10 +176,10 @@ public class Search
         URtoUL[0] = c.URtoUL;
         UBtoDF[0] = c.UBtoDF;
         minDistPhase1[1] = 1; // else failure for depth=1, n=0
-        int mv = 0, n = 0;
+        int n = 0;
         bool busy = false;
         int depthPhase1 = 1;
-        long tStart = DateTimeHelper.CurrentUnixTimeMillis();
+        DateTime tStart = DateTime.UtcNow;
            
         // +++++++++++++++++++ Main loop ++++++++++++++++++++++++++++++++++++++++++
         do
@@ -228,7 +206,7 @@ public class Search
                         if (++ax[n] > 5)
                         {
 
-                            if (DateTimeHelper.CurrentUnixTimeMillis() - tStart > timeOut << 10)
+                            if ((DateTime.UtcNow - tStart).TotalMilliseconds > timeOut << 10)
                             {
                                 return "Error 8";
                             }
@@ -271,7 +249,7 @@ public class Search
 
             // +++++++++++++ compute new coordinates and new minDistPhase1 ++++++++++
             // if minDistPhase1 =0, the H subgroup is reached
-            mv = 3 * ax[n] + po[n] - 1;
+            int mv = 3 * ax[n] + po[n] - 1;
             flip[n + 1] = CoordCube.flipMove[flip[n],mv];
             twist[n + 1] = CoordCube.twistMove[twist[n],mv];
             slice[n + 1] = CoordCube.FRtoBR_Move[slice[n] * 24,mv] / 24;
@@ -281,6 +259,7 @@ public class Search
             if (minDistPhase1[n + 1] == 0 && n >= depthPhase1 - 5)
             {
                 minDistPhase1[n + 1] = 10; // instead of 10 any value >5 is possible
+                int s;
                 if (n == depthPhase1 - 1 && (s = totalDepth(depthPhase1, maxDepth)) >= 0)
                 {
                     if (s == depthPhase1 || (ax[depthPhase1 - 1] != ax[depthPhase1] && ax[depthPhase1 - 1] != ax[depthPhase1] + 3))
@@ -288,7 +267,6 @@ public class Search
                         return useSeparator ? solutionToString(s, depthPhase1) : solutionToString(s);
                     }
                 }
-
             }
         } while (true);
     }
@@ -419,21 +397,5 @@ public class Search
 
         } while (minDistPhase2[n + 1] != 0);
         return depthPhase1 + depthPhase2;
-    }
-}
-
-//---------------------------------------------------------------------------------------------------------
-//	Copyright © 2007 - 2020 Tangible Software Solutions, Inc.
-//	This class can be used by anyone provided that the copyright notice remains intact.
-//
-//	This class is used to replace calls to Java's System.currentTimeMillis with the C# equivalent.
-//	Unix time is defined as the number of seconds that have elapsed since midnight UTC, 1 January 1970.
-//---------------------------------------------------------------------------------------------------------
-internal static class DateTimeHelper
-{
-    private static readonly System.DateTime Jan1st1970 = new System.DateTime(1970, 1, 1, 0, 0, 0, System.DateTimeKind.Utc);
-    public static long CurrentUnixTimeMillis()
-    {
-        return (long)(DateTime.UtcNow - Jan1st1970).TotalMilliseconds;
     }
 }
