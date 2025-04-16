@@ -22,53 +22,8 @@ public class Search
     internal static int[] minDistPhase2 = new int[31];
 
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    // generate the solution string from the array data
-    internal static string solutionToString(int length)
-    {
-        string s = "";
-        for (int i = 0; i < length; i++)
-        {
-            switch (ax[i])
-            {
-                case 0:
-                    s += "U";
-                    break;
-                case 1:
-                    s += "R";
-                    break;
-                case 2:
-                    s += "F";
-                    break;
-                case 3:
-                    s += "D";
-                    break;
-                case 4:
-                    s += "L";
-                    break;
-                case 5:
-                    s += "B";
-                    break;
-            }
-            switch (po[i])
-            {
-                case 1:
-                    s += " ";
-                    break;
-                case 2:
-                    s += "2 ";
-                    break;
-                case 3:
-                    s += "' ";
-                    break;
-
-            }
-        }
-        return s;
-    }
-
-    // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     // generate the solution string from the array data including a separator between phase1 and phase2 moves
-    internal static string solutionToString(int length, int depthPhase1)
+    internal static string solutionToString(int length, int depthPhase1 = 0)
     {
         string s = "";
         for (int i = 0; i < length; i++)
@@ -112,7 +67,7 @@ public class Search
                 s += ". ";
             }
         }
-        return s;
+        return s.Trim();
     }
 
     /**
@@ -143,7 +98,7 @@ public class Search
      *         Error 7: No solution exists for the given maxDepth<br>
      *         Error 8: Timeout, no solution within given time
      */
-    public static string solution(string facelets, out string info, int maxDepth = 22, long timeOut = 6000, bool useSeparator = false)
+    public static string solution(string facelets, out string info, int maxDepth = 30, long timeOut = 6000, bool useSeparator = false)
     {
         if (facelets == FaceCube.SolvedCube)
         {
@@ -264,7 +219,7 @@ public class Search
                 {
                     if (s == depthPhase1 || (ax[depthPhase1 - 1] != ax[depthPhase1] && ax[depthPhase1 - 1] != ax[depthPhase1] + 3))
                     {
-                        return useSeparator ? solutionToString(s, depthPhase1) : solutionToString(s);
+                        return solutionToString(s, useSeparator ? depthPhase1 : 0);
                     }
                 }
             }

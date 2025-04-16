@@ -118,7 +118,6 @@ public class CubieCube
         };
     }
 
-
     // this CubieCube array represents the 6 basic cube moves
     public static CubieCube[] moveCube = [SetMoveU(), SetMoveR(), SetMoveF(), SetMoveD(), SetMoveL(), SetMoveB()];
     
@@ -170,8 +169,7 @@ public class CubieCube
     }
 
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    static void rotateRight(Corner[] arr, int l, int r)
-        // Right rotation of all array elements between l and r
+    static void rotateRight(Corner[] arr, int l, int r) // Right rotation of all array elements between l and r
     {
         Corner temp = arr[r];
         for (int i = r; i > l; i--)
@@ -180,8 +178,7 @@ public class CubieCube
     }
 
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    static void rotateLeft(Edge[] arr, int l, int r)
-        // Left rotation of all array elements between l and r
+    static void rotateLeft(Edge[] arr, int l, int r) // Left rotation of all array elements between l and r
     {
         Edge temp = arr[l];
         for (int i = l; i < r; i++)
@@ -190,8 +187,7 @@ public class CubieCube
     }
 
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    static void rotateRight(Edge[] arr, int l, int r)
-        // Right rotation of all array elements between l and r
+    static void rotateRight(Edge[] arr, int l, int r) // Right rotation of all array elements between l and r
     {
         Edge temp = arr[r];
         for (int i = r; i > l; i--)
@@ -205,7 +201,7 @@ public class CubieCube
     {
         FaceCube fcRet = new FaceCube();
 
-        foreach (Corner c in (Corner[])Enum.GetValues(typeof(Corner)))
+        foreach (Corner c in Enum.GetValues(typeof(Corner)))
         {
             int i = (int)c;
             int j = (int)cp[i];// cornercubie with index j is at
@@ -215,7 +211,7 @@ public class CubieCube
                 fcRet.f[(int)FaceCube.cornerFacelet[i][(n + ori) % 3]] = FaceCube.cornerColor[j][n];
         }
 
-        foreach (Edge e in (Edge[])Enum.GetValues(typeof(Edge)))
+        foreach (Edge e in Enum.GetValues(typeof(Edge)))
         {
             int i = (int)e;
             int j = (int)ep[i];// edgecubie with index j is at edgeposition
@@ -244,7 +240,7 @@ public class CubieCube
     {
         Corner[] cPerm = new Corner[8];
         byte[] cOri = new byte[8];
-        foreach (Corner corn in (Corner[])Enum.GetValues(typeof(Corner)))
+        foreach (Corner corn in Enum.GetValues(typeof(Corner)))
         {
             cPerm[(int)corn] = cp[(int)b.cp[(int)corn]];
 
@@ -285,7 +281,7 @@ public class CubieCube
             cOri[(int)corn] = ori;
         }
  
-        foreach (Corner c in (Corner[])Enum.GetValues(typeof(Corner)))
+        foreach (Corner c in Enum.GetValues(typeof(Corner)))
         {
             cp[(int)c] = cPerm[(int)c];
             co[(int)c] = cOri[(int)c];
@@ -298,12 +294,12 @@ public class CubieCube
     {
         Edge[] ePerm = new Edge[12];
         byte[] eOri = new byte[12];
-        foreach (Edge edge in (Edge[])Enum.GetValues(typeof(Edge)))
+        foreach (Edge edge in Enum.GetValues(typeof(Edge)))
         {
             ePerm[(int)edge] = ep[(int)b.ep[(int)edge]];
             eOri[(int)edge] = (byte)((b.eo[(int)edge] + eo[(int)b.ep[(int)edge]]) % 2);
         }
-        foreach (Edge e in (Edge[])Enum.GetValues(typeof(Edge)))
+        foreach (Edge e in Enum.GetValues(typeof(Edge)))
         {
             ep[(int)e] = ePerm[(int)e];
             eo[(int)e] = eOri[(int)e];
@@ -322,13 +318,13 @@ public class CubieCube
     // Compute the inverse CubieCube
     void invCubieCube(CubieCube c)
     {
-        foreach (Edge edge in (Edge[])Enum.GetValues(typeof(Edge)))
+        foreach (Edge edge in Enum.GetValues(typeof(Edge)))
             c.ep[(int)ep[(int)edge]] = edge;
-        foreach (Edge edge in (Edge[])Enum.GetValues(typeof(Edge)))
+        foreach (Edge edge in Enum.GetValues(typeof(Edge)))
             c.eo[(int)edge] = eo[(int)c.ep[(int)edge]];
-        foreach (Corner corn in (Corner[])Enum.GetValues(typeof(Corner)))
+        foreach (Corner corn in Enum.GetValues(typeof(Corner)))
             c.cp[(int)cp[(int)corn]] = corn;
-        foreach (Corner corn in (Corner[])Enum.GetValues(typeof(Corner)))
+        foreach (Corner corn in Enum.GetValues(typeof(Corner)))
         {
             byte ori = co[(int)c.cp[(int)corn]];
             if (ori >= 3)// Just for completeness. We do not invert mirrored
@@ -450,7 +446,7 @@ public class CubieCube
         Edge[] otherEdge = [Edge.UR, Edge.UF, Edge.UL, Edge.UB, Edge.DR, Edge.DF, Edge.DL, Edge.DB];
         int b = idx % 24; // Permutation
         int a = idx / 24; // Combination
-        foreach (Edge e in (Edge[])Enum.GetValues(typeof(Edge)))
+        foreach (Edge e in Enum.GetValues(typeof(Edge)))
             ep[(int)e] = Edge.DB;// Use UR to invalidate all edges
 
         for (int j = 1, k; j < 4; j++)// generate permutation from index b
@@ -512,7 +508,7 @@ public class CubieCube
         Corner[] otherCorner = [Corner.DBL, Corner.DRB];
         int b = idx % 720; // Permutation
         int a = idx / 720; // Combination
-        foreach (Corner c in (Corner[])Enum.GetValues(typeof(Corner)))
+        foreach (Corner c in Enum.GetValues(typeof(Corner)))
             cp[(int)c] = Corner.DRB;// Use DRB to invalidate all corners
 
         for (int j = 1, k; j < 6; j++)// generate permutation from index b
@@ -572,7 +568,7 @@ public class CubieCube
         Edge[] otherEdge = [Edge.DL, Edge.DB, Edge.FR, Edge.FL, Edge.BL, Edge.BR];
         int b = idx % 720; // Permutation
         int a = idx / 720; // Combination
-        foreach (Edge e in (Edge[])Enum.GetValues(typeof(Edge)))
+        foreach (Edge e in Enum.GetValues(typeof(Edge)))
             ep[(int)e] = Edge.BR;// Use BR to invalidate all edges
 
         for (int j = 1, k; j < 6; j++)// generate permutation from index b
@@ -650,7 +646,7 @@ public class CubieCube
         Edge[] edge3 = [Edge.UR, Edge.UF, Edge.UL];
         int b = idx % 6; // Permutation
         int a = idx / 6; // Combination
-        foreach (Edge e in (Edge[])Enum.GetValues(typeof(Edge)))
+        foreach (Edge e in Enum.GetValues(typeof(Edge)))
             ep[(int)e] = Edge.BR;// Use BR to invalidate all edges
 
         for (int j = 1, k; j < 3; j++)// generate permutation from index b
@@ -705,7 +701,7 @@ public class CubieCube
         Edge[] edge3 = [Edge.UB, Edge.DR, Edge.DF];
         int b = idx % 6; // Permutation
         int a = idx / 6; // Combination
-        foreach (Edge e in (Edge[])Enum.GetValues(typeof(Edge)))
+        foreach (Edge e in Enum.GetValues(typeof(Edge)))
             ep[(int)e] = Edge.BR;// Use BR to invalidate all edges
 
         for (int j = 1, k; j < 3; j++)// generate permutation from index b
@@ -812,7 +808,7 @@ public class CubieCube
     {
         int sum = 0;
         int[] edgeCount = new int[12];
-        foreach (Edge e in (Edge[])Enum.GetValues(typeof(Edge)))
+        foreach (Edge e in Enum.GetValues(typeof(Edge)))
             edgeCount[(int)ep[(int)e]]++;
         for (int i = 0; i < 12; i++)
             if (edgeCount[i] != 1)
@@ -824,7 +820,7 @@ public class CubieCube
             return -3;
 
         int[] cornerCount = new int[8];
-        foreach (Corner c in (Corner[])Enum.GetValues(typeof(Corner)))
+        foreach (Corner c in Enum.GetValues(typeof(Corner)))
             cornerCount[(int)cp[(int)c]]++;
         for (int i = 0; i < 8; i++)
             if (cornerCount[i] != 1)

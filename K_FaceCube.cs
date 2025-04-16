@@ -95,7 +95,7 @@ public class FaceCube
     {
         for (int i = 0; i < cubeString.Length; i++)
         {
-            CubeColor col = (CubeColor)Enum.Parse(typeof(CubeColor), cubeString[i].ToString());
+            CubeColor col = Enum.Parse<CubeColor>(cubeString[i].ToString());
             f[i] = col;
         }
     }
@@ -117,11 +117,11 @@ public class FaceCube
         byte ori;
         CubieCube ccRet = new CubieCube();
         for (int i = 0; i < 8; i++)
-            ccRet.cp[i] = Corner.URF;// invalidate corners
+            ccRet.cp[i] = Corner.URF; // invalidate corners
         for (int i = 0; i < 12; i++)
-            ccRet.ep[i] = Edge.UR;// and edges
+            ccRet.ep[i] = Edge.UR; // and edges
         CubeColor col1, col2;
-        foreach (Corner i in (Corner[])Enum.GetValues(typeof(Corner)))
+        foreach (Corner i in Enum.GetValues(typeof(Corner)))
         {
             // get the CubeColors of the cubie at corner i, starting with U/D
             for (ori = 0; ori < 3; ori++)
@@ -130,7 +130,7 @@ public class FaceCube
             col1 = f[(int)cornerFacelet[(int)i][(ori + 1) % 3]];
             col2 = f[(int)cornerFacelet[(int)i][(ori + 2) % 3]];
 
-            foreach (Corner j in (Corner[])Enum.GetValues(typeof(Corner)))
+            foreach (Corner j in Enum.GetValues(typeof(Corner)))
             {
                 if (col1 == cornerColor[(int)j][1] && col2 == cornerColor[(int)j][2])
                 {
@@ -141,8 +141,8 @@ public class FaceCube
                 }
             }
         }
-        foreach (Edge i in (Edge[])Enum.GetValues(typeof(Edge)))
-        foreach (Edge j in (Edge[])Enum.GetValues(typeof(Edge)))
+        foreach (Edge i in Enum.GetValues(typeof(Edge)))
+        foreach (Edge j in Enum.GetValues(typeof(Edge)))
         {
             if (f[(int)edgeFacelet[(int)i][0]] == edgeColor[(int)j][0]
                 && f[(int)edgeFacelet[(int)i][1]] == edgeColor[(int)j][1])
